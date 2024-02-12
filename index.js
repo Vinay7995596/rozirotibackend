@@ -27,7 +27,7 @@ connection.connect((err) => {
 //home page
 app.get('/',(req,res)=>{res.send("<h4>welcome</h4>")})
 // Fetch all transactions
-app.get('/transactions', (req, res) => {
+app.get('/get/transactions', (req, res) => {
   const query = 'SELECT * FROM transactions';
   connection.query(query, (err, results) => {
     if (err) {
@@ -40,7 +40,7 @@ app.get('/transactions', (req, res) => {
 });
 
 // Add a transaction
-app.post('/transaction', (req, res) => {
+app.post('/post/transaction', (req, res) => {
   const { date, type, amount } = req.body;
 
   // Fetch the latest transaction to get the previous remaining amount
