@@ -4,7 +4,7 @@ const cors = require('cors');
 const app = express()
 const server = require('http').createServer(app)
 
-const port = 'https://backend-gd98.onrender.com/' || 3000;
+const port =  3000;
 
 app.use(express.json());
 app.use(cors()); // Enable CORS
