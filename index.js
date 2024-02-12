@@ -3,7 +3,7 @@ const mysql = require('mysql');
 const cors = require('cors');
 
 const app = express();
-const port = 3001;
+const port = "https://backend-gd98.onrender.com"||3001;
 
 app.use(express.json());
 app.use(cors()); // Enable CORS
@@ -23,6 +23,9 @@ connection.connect((err) => {
   console.log('Connected to MySQL as id ' + connection.threadId);
 });
 
+
+//home page
+app.get('/',(req,res)=>{res.send("<h4>welcome</h4>")})
 // Fetch all transactions
 app.get('/transactions', (req, res) => {
   const query = 'SELECT * FROM transactions';
@@ -76,6 +79,4 @@ app.post('/transaction', (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+app.listen(port);
