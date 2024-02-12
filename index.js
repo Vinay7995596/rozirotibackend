@@ -9,10 +9,10 @@ app.use(express.json());
 app.use(cors()); // Enable CORS
 
 const connection = mysql.createConnection({
-  host: 'sql306.infinityfree.com',
-  user: 'if0_35960116',
-  password: 'LMIBPULvc80x',
-  database: 'if0_35960116_vinay'
+  host: 'localhost',
+  user: 'root',
+  password: '',
+  database: 'vinay'
 });
 
 connection.connect((err) => {
