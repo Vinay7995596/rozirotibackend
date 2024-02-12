@@ -1,10 +1,9 @@
 const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
-const app = express()
-const server = require('http').createServer(app)
 
-const port =  3000;
+const app = express();
+const port = 3001;
 
 app.use(express.json());
 app.use(cors()); // Enable CORS
@@ -16,13 +15,20 @@ const connection = mysql.createConnection({
   database: 'if0_35960116_vinay'
 });
 
-connection.connect();
+connection.connect((err) => {
+  if (err) {
+    console.error('Error connecting to MySQL: ' + err.stack);
+    return;
+  }
+  console.log('Connected to MySQL as id ' + connection.threadId);
+});
 
 // Fetch all transactions
 app.get('/transactions', (req, res) => {
   const query = 'SELECT * FROM transactions';
   connection.query(query, (err, results) => {
     if (err) {
+      console.error('Error fetching transactions: ' + err.message);
       res.status(500).send('Error fetching transactions');
       return;
     }
@@ -33,12 +39,12 @@ app.get('/transactions', (req, res) => {
 // Add a transaction
 app.post('/transaction', (req, res) => {
   const { date, type, amount } = req.body;
-  
+
   // Fetch the latest transaction to get the previous remaining amount
   const selectQuery = 'SELECT remaining_amount FROM transactions ORDER BY id DESC LIMIT 1';
   connection.query(selectQuery, (err, selectResult) => {
     if (err) {
-      
+      console.error('Error fetching remaining amount: ' + err.message);
       res.status(500).send('Error fetching remaining amount');
       return;
     }
@@ -60,13 +66,16 @@ app.post('/transaction', (req, res) => {
     const insertQuery = 'INSERT INTO transactions (date, type, amount, remaining_amount) VALUES (?, ?, ?, ?)';
     connection.query(insertQuery, [date, type, amount, remainingAmount], (err, result) => {
       if (err) {
+        console.error('Error adding transaction: ' + err.message);
         res.status(500).send('Error adding transaction');
         return;
       }
-      
+
       res.send('Transaction added successfully');
     });
   });
 });
 
-server.listen(port)
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
