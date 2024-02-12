@@ -1,8 +1,9 @@
 const express = require('express');
 const mysql = require('mysql');
 const cors = require('cors');
+const app = express()
+const server = require('http').createServer(app)
 
-const app = express();
 const port = 'https://backend-gd98.onrender.com/' || 3000;
 
 app.use(express.json());
@@ -15,20 +16,13 @@ const connection = mysql.createConnection({
   database: 'if0_35960116_vinay'
 });
 
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL: ' + err.stack);
-    return;
-  }
-  console.log('Connected to MySQL as id ' + connection.threadId);
-});
+connection.connect();
 
 // Fetch all transactions
 app.get('/transactions', (req, res) => {
   const query = 'SELECT * FROM transactions';
   connection.query(query, (err, results) => {
     if (err) {
-      console.error('Error fetching transactions: ' + err.message);
       res.status(500).send('Error fetching transactions');
       return;
     }
@@ -44,7 +38,7 @@ app.post('/transaction', (req, res) => {
   const selectQuery = 'SELECT remaining_amount FROM transactions ORDER BY id DESC LIMIT 1';
   connection.query(selectQuery, (err, selectResult) => {
     if (err) {
-      console.error('Error fetching remaining amount: ' + err.message);
+      
       res.status(500).send('Error fetching remaining amount');
       return;
     }
@@ -66,7 +60,6 @@ app.post('/transaction', (req, res) => {
     const insertQuery = 'INSERT INTO transactions (date, type, amount, remaining_amount) VALUES (?, ?, ?, ?)';
     connection.query(insertQuery, [date, type, amount, remainingAmount], (err, result) => {
       if (err) {
-        console.error('Error adding transaction: ' + err.message);
         res.status(500).send('Error adding transaction');
         return;
       }
@@ -76,4 +69,4 @@ app.post('/transaction', (req, res) => {
   });
 });
 
-app.listen(port)
+server.listen(port)
