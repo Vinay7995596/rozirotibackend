@@ -40,7 +40,7 @@ app.get('/get/transactions', (req, res) => {
 });
 
 // Add a transaction
-app.post('/post/transaction', (req, res) => {
+app.post('/post/transactions', (req, res) => {
   const { date, type, amount } = req.body;
 
   // Fetch the latest transaction to get the previous remaining amount
